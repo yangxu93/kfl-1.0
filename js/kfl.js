@@ -166,6 +166,49 @@ app.controller('cartCtrl', ['$scope', '$kflHttp',
         $scope.editText = '编辑'
       }
     }
+    
+     //请求服务器端，读取指定用户的购物车的数据
+    $kflHttp.sendRequest(
+      'data/cart_select.php?uid=1',
+      function (result) {
+        console.log(result);
+        $scope.cart = result.data;
+      }
+    )
+
+    function update(did, count) {
+      $kflHttp.sendRequest(
+        'data/cart_update.php?uid=1&did=' + did + "&count=" + count,
+        function (result) {
+          console.log(result);
+        }
+      )
+    }
+
+    $scope.minus = function (index) {
+      //将产品的数据减1
+      var dish = $scope.cart[index];
+      if (dish.dishCount == 1) {
+        return
+      }
+      else {
+        dish.dishCount--;
+        update(dish.did, dish.dishCount);
+      }
+    }
+
+    $scope.add = function (index) {
+      //将产品的数据加1
+      var dish = $scope.cart[index];
+      console.log(dish);
+      dish.dishCount++;
+      update(dish.did, dish.dishCount);
+
+    }
+
+  }
+])
+
 
 
 
